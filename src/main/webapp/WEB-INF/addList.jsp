@@ -1,20 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="java.util.List"%>
-<%@ page import="com.javaex.vo.GuestbookVo"%>
-
-<%
-List<GuestbookVo> guestList = (List<GuestbookVo>) request.getAttribute("guestList");
-System.out.println("여기는 jsp");
-System.out.println(guestList);
-%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Guestbook jstl</title>
 </head>
 <body>
 	<form action="/guestbook/gbc" method="get">
@@ -37,24 +28,21 @@ System.out.println(guestList);
 	</form>
 	<br>
 
-	<%
-	for (int i = 0; i < guestList.size(); i++) {
-	%>
+	<c:forEach items="${requestScope.guestList}" var="guestbookVo">
+	
 	<table border="1" width="540px">
 		<tr>
-			<td><%=guestList.get(i).getScriptNo()%></td>
-			<td><%=guestList.get(i).getName()%></td>
-			<td><%=guestList.get(i).getDate()%></td>
+			<td>${guestbookVo.scriptNo }</td>
+			<td>${guestbookVo.name }</td>
+			<td>${guestbookVo.date }</td>
 			<td><a
-				href="/guestbook/gbc?action=deleteform&no=<%=guestList.get(i).getScriptNo()%>">삭제</a></td>
+				href="/guestbook/gbc?action=deleteform&no=${guestbookVo.scriptNo }">삭제폼으로 이동</a></td>
 		</tr>
 		<tr>
-			<td colspan="4"><%=guestList.get(i).getScript()%></td>
+			<td colspan="4">${guestbookVo.script}</td>
 		</tr>
 	</table>
 	<br>
-	<%
-	}
-	%>
+	</c:forEach>
 </body>
 </html>

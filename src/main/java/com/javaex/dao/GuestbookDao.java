@@ -91,7 +91,79 @@ public class GuestbookDao {
 
 		}
 		this.close();
-		System.out.println(count);
+		System.out.println(count + "건 등록됨");
+		return count;
+	}
+
+	// 특정 방명록 항목 가져오기 (script_no로 조회)
+	public GuestbookVo getScriptNo(int no) {
+		GuestbookVo guestbookVo = null;
+
+		this.getConnection();
+
+		try {
+			// 3. SQL문 준비 / 바인딩 / 실행
+			// *SQL문 준비
+			String query = "";
+			query += " select script_no ";
+			query += "		 ,name ";
+			query += "		 ,date ";
+			query += "		 ,script ";
+			query += " from guest ";
+			query += " where script_no = ? ";
+
+			// *바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, no);
+
+			// *실행
+			rs = pstmt.executeQuery();
+
+			// 4. 결과처리
+			rs.next();
+//				int scriptNo = rs.getInt("script_no");
+//				String name = rs.getString("name");
+//				String date = rs.getString("date");
+//				String script = rs.getString("script");
+			guestbookVo = new GuestbookVo(rs.getInt("script_no"), rs.getString("name"), rs.getString("date"), rs.getString("script"));
+			
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		this.close();
+		
+		return guestbookVo;
+	}
+
+	// 방명록 삭제
+	public int delete(GuestbookVo guestbookVo) {
+		int count = -1;
+		
+		this.getConnection();
+
+		try {
+			// 3. SQL문 준비 / 바인딩 / 실행
+			// *SQL문 준비
+			String query = "";
+			query += " delete from guest ";
+			query += " where script_no = ? ";
+			query += " and password = ? ";
+
+			// *바인딩
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, guestbookVo.getScriptNo());
+			pstmt.setString(2, guestbookVo.getPassword());
+
+			// *실행
+			 count = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+
+		}
+		this.close();
+		System.out.println(count + "건 삭제됨");
 		return count;
 	}
 
@@ -125,9 +197,9 @@ public class GuestbookDao {
 				String date = rs.getString("date");
 				String script = rs.getString("script");
 
-				GuestbookVo guestVo = new GuestbookVo(no, name, date, script);
+				GuestbookVo guestbookVo = new GuestbookVo(no, name, date, script);
 
-				guestList.add(guestVo);
+				guestList.add(guestbookVo);
 			}
 
 		} catch (SQLException e) {
@@ -138,33 +210,5 @@ public class GuestbookDao {
 		return guestList;
 	}
 
-	// 방명록 삭제
-	public int delete(GuestbookVo guestVo) {
-		int count = -1;
-
-		this.getConnection();
-
-		try {
-			// 3. SQL문 준비 / 바인딩 / 실행
-			// *SQL문 준비
-			String query = "";
-			query += " delete from guest ";
-			query += " where script_no = ? ";
-
-			// *바인딩
-			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, guestVo.getScriptNo());
-
-			// *실행
-			count = pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			System.out.println("error:" + e);
-
-		}
-		this.close();
-		System.out.println(count);
-		return count;
-	}
 
 }

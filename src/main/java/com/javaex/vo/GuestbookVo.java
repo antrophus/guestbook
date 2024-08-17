@@ -17,6 +17,11 @@ public class GuestbookVo {
 		this.scriptNo = scriptNo;
 	}
 	
+	public GuestbookVo(int scriptNo, String password) {
+		this.scriptNo = scriptNo;
+		this.password = password;
+	}
+	
 	public GuestbookVo(int scriptNo, String name, String script) {
 		this.scriptNo = scriptNo;
 		this.name = name;
